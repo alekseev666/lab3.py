@@ -13,20 +13,17 @@ def load_trainings(path: Path) -> list[Training]:
     return [
         Training(
             date=raw["date"],
-            name=raw["name"],
             exercises=[Exercise(**exercise) for exercise in raw["exercises"]],
         )
         for raw in raw_trainings
     ]
 
 
-def add_training(training: Training, path: Path) -> None:
-    trainings = load_trainings(path)
-    trainings.append(training)
+def save_trainings(trainings: list[Training], path: Path) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with open(path, "w", encoding="utf-8") as file:
         json.dump(
-            [asdict(item) for item in trainings],
+            [asdict(training) for training in trainings],
             file,
             ensure_ascii=False,
             indent=4,

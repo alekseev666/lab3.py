@@ -11,5 +11,4 @@ class Exercise:
 @dataclass
 class Training:
     date: str
-    name: str
     exercises: list[Exercise] = field(default_factory=list)

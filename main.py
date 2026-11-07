@@ -1,14 +1,16 @@
-from datetime import date
+from datetime import date, datetime
 from pathlib import Path
 
 from model.training import Exercise, Training
 from model.user import User
-from service.training_storage import add_training, load_trainings
+from service.training_storage import load_trainings, save_trainings
 from service.user_storage import load_user, save_user
 
 DATA_DIR = Path(__file__).parent / "data"
 USER_PATH = DATA_DIR / "user.json"
 TRAININGS_PATH = DATA_DIR / "trainings.json"
+
+DATE_FORMAT = "%d.%m.%Y"
 
 LEVELS = {
     1: "Начинающий (0–3 месяца)",
@@ -44,6 +46,26 @@ def ask_text(prompt: str) -> str:
         print("Строка не должна быть пустой.")
 
 
+def ask_date() -> str:
+    """Спрашивает дату в формате ДД.ММ.ГГГГ, пустой ввод — сегодня.
+
+    Возвращает дату в формате ISO (ГГГГ-ММ-ДД) для хранения.
+    """
+    today = date.today()
+    while True:
+        text = input(f"Дата (ДД.ММ.ГГГГ, Enter - {today:{DATE_FORMAT}}): ").strip()
+        if not text:
+            return today.isoformat()
+        try:
+            return datetime.strptime(text, DATE_FORMAT).date().isoformat()
+        except ValueError:
+            print("Неверная дата.")
+
+
+def format_date(iso_date: str) -> str:
+    return date.fromisoformat(iso_date).strftime(DATE_FORMAT)
+
+
 def register_user() -> User:
     print("Заполните профиль.")
     gender = ask_text("Ваш пол: ")
@@ -56,20 +78,68 @@ def register_user() -> User:
     return User(gender, height, weight, level)
 
 
-def ask_training() -> Training:
-    name = ask_text("Название тренировки: ")
-    exercises_count = ask_number("Сколько упражнений: ")
-    exercises = []
-    for index in range(1, exercises_count + 1):
-        print(f"Упражнение {index}:")
-        exercises.append(
-            Exercise(
-                name=ask_text("  Название: "),
-                weight=ask_number("  Вес (кг, 0 - без веса): ", float, min_value=0),
-                reps=ask_number("  Повторения: "),
-            )
+def ask_exercise() -> Exercise:
+    return Exercise(
+        name=ask_text("  Название упражнения: "),
+        weight=ask_number("  Вес (кг, 0 - без веса): ", float, min_value=0),
+        reps=ask_number("  Повторения: "),
+    )
+
+
+def print_training(training: Training) -> None:
+    print(f"\nТренировка {format_date(training.date)}")
+    if not training.exercises:
+        print("  Упражнений пока нет.")
+    for number, exercise in enumerate(training.exercises, start=1):
+        print(f"  {number}. {exercise.name} — {exercise.weight:g} кг × {exercise.reps}")
+
+
+def choose_training(trainings: list[Training]) -> Training | None:
+    if not trainings:
+        print("Тренировок пока нет.")
+        return None
+    for number, training in enumerate(trainings, start=1):
+        print(
+            f"  {number}. {format_date(training.date)} "
+            f"(упражнений: {len(training.exercises)})"
         )
-    return Training(date.today().isoformat(), name, exercises)
+    choice = ask_number(
+        "Номер тренировки (0 - назад): ",
+        allowed=range(len(trainings) + 1),
+        min_value=0,
+    )
+    return trainings[choice - 1] if choice else None
+
+
+def edit_training(training: Training, trainings: list[Training]) -> None:
+    """Меню одной тренировки. Каждое изменение сразу сохраняется в файл."""
+    while True:
+        print_training(training)
+        print("1 - Добавить упражнение")
+        print("2 - Удалить упражнение")
+        print("3 - Изменить дату")
+        print("0 - В главное меню")
+        choice = input("Выбор: ").strip()
+        if choice == "1":
+            training.exercises.append(ask_exercise())
+        elif choice == "2":
+            if not training.exercises:
+                print("Удалять нечего.")
+                continue
+            number = ask_number(
+                "Номер упражнения: ",
+                allowed=range(1, len(training.exercises) + 1),
+            )
+            training.exercises.pop(number - 1)
+        elif choice == "3":
+            training.date = ask_date()
+        elif choice == "0":
+            return
+        else:
+            print("Нет такого пункта.")
+            continue
+        trainings.sort(key=lambda item: item.date)
+        save_trainings(trainings, TRAININGS_PATH)
 
 
 def main() -> None:
@@ -78,15 +148,23 @@ def main() -> None:
         user = register_user()
         save_user(user, USER_PATH)
 
+    trainings = load_trainings(TRAININGS_PATH)
     while True:
-        trainings_count = len(load_trainings(TRAININGS_PATH))
-        print(f"\nВсего тренировок: {trainings_count}")
+        print(f"\nВсего тренировок: {len(trainings)}")
         print("1 - Добавить тренировку")
+        print("2 - Редактировать тренировку")
         print("0 - Выход")
         choice = input("Выбор: ").strip()
         if choice == "1":
-            add_training(ask_training(), TRAININGS_PATH)
-            print("Тренировка сохранена.")
+            training = Training(ask_date())
+            trainings.append(training)
+            trainings.sort(key=lambda item: item.date)
+            save_trainings(trainings, TRAININGS_PATH)
+            edit_training(training, trainings)
+        elif choice == "2":
+            training = choose_training(trainings)
+            if training is not None:
+                edit_training(training, trainings)
         elif choice == "0":
             break
         else:
