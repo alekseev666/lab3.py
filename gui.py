@@ -25,6 +25,7 @@ from PySide6.QtWidgets import (
 )
 
 from main import TRAININGS_PATH, format_date
+from model.exceptions import StorageError, ValidationError
 from model.training import Exercise, Training
 from service.training_storage import load_trainings, save_trainings
 
@@ -128,13 +129,14 @@ class TrainingDialog(QDialog):
             self.table.setItem(row, 2, QTableWidgetItem(str(exercise.reps)))
 
     def add_exercise(self) -> None:
-        name = self.name_edit.text().strip()
-        if not name:
-            QMessageBox.warning(self, "Ошибка", "Введите название упражнения.")
+        try:
+            exercise = Exercise(
+                self.name_edit.text(), self.weight_edit.value(), self.reps_edit.value()
+            )
+        except ValidationError as error:
+            QMessageBox.warning(self, "Ошибка", str(error))
             return
-        self.training.exercises.append(
-            Exercise(name, self.weight_edit.value(), self.reps_edit.value())
-        )
+        self.training.exercises.append(exercise)
         self.show_exercises()
         self.name_edit.clear()
         self.name_edit.setFocus() 
@@ -224,7 +226,7 @@ class MainWindow(QMainWindow):
         training = Training(dialog.iso_date())
         self.trainings.append(training)
         self.trainings.sort(key=lambda item: item.date)
-        save_trainings(self.trainings, TRAININGS_PATH)
+        self.save()
         self.show_trainings()
         self.edit_training(training)  
 
@@ -237,8 +239,14 @@ class MainWindow(QMainWindow):
         dialog.exec()
         if dialog.deleted:
             self.trainings.remove(training)
-        save_trainings(self.trainings, TRAININGS_PATH)
+        self.save()
         self.show_trainings()
+
+    def save(self) -> None:
+        try:
+            save_trainings(self.trainings, TRAININGS_PATH)
+        except StorageError as error:
+            QMessageBox.critical(self, "Ошибка сохранения", str(error))
 
 
 def main() -> None:
@@ -251,7 +259,11 @@ def main() -> None:
     )
     app.installTranslator(translator)
 
-    window = MainWindow()
+    try:
+        window = MainWindow()
+    except StorageError as error:
+        QMessageBox.critical(None, "Ошибка загрузки", str(error))
+        sys.exit(1)
     window.show()
     sys.exit(app.exec())  
 
