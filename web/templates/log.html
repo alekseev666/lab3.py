@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Журнал</h1>
+<p class="muted">Новые записи сверху</p>
+
+<!-- строки журнала -->
+<pre>{% for line in lines %}{{ line }}
+{% else %}Журнал пока пуст.{% endfor %}</pre>
+{% endblock %}

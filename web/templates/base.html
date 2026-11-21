@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Трекер тренировок</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <!-- меню сверху -->
+    <nav>
+        <a href="/">Тренировки</a>
+        <a href="/progress">Мой прогресс</a>
+        <a href="/activity">Активность</a>
+        <a href="/log">Журнал</a>
+        <a href="/profile">Пользователь</a>
+    </nav>
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>

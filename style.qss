@@ -1,0 +1,182 @@
+/* общий шрифт */
+QWidget {
+    font-family: "Segoe UI";
+    font-size: 10pt;
+}
+
+/* серый фон окон */
+QMainWindow, QDialog {
+    background: #F2F2F7;
+}
+
+/* большие заголовки */
+QLabel#title {
+    font-size: 22pt;
+    font-weight: bold;
+}
+
+/* серый поясняющий текст */
+QLabel#muted {
+    color: #6C6C70;
+}
+
+/* название группы упражнений */
+QLabel#section {
+    color: #6C6C70;
+    font-size: 9pt;
+    font-weight: bold;
+    padding: 0 10px;
+}
+
+/* крупное число результата */
+QLabel#value {
+    font-size: 14pt;
+    font-weight: bold;
+}
+
+/* белая карточка */
+QFrame#card {
+    background: white;
+    border-radius: 12px;
+}
+
+/* белые списки и таблицы */
+QListWidget, QTableWidget, QPlainTextEdit {
+    background: white;
+    border: none;
+    border-radius: 12px;
+    padding: 4px;
+}
+
+/* строки списков */
+QListWidget::item {
+    padding: 8px;
+    border-bottom: 1px solid #E5E5EA;
+}
+
+QListWidget#trainings::item, QListWidget#progress::item {
+    padding: 0;
+}
+
+QListWidget#trainings QLabel {
+    padding: 6px 10px;
+}
+
+QListWidget::item:hover {
+    background: #F7F7F9;
+}
+
+QListWidget::item:selected, QTableWidget::item:selected {
+    background: #FFF4CC;
+    color: black;
+}
+
+/* строки и шапка таблиц */
+QTableWidget::item {
+    border-bottom: 1px solid #E5E5EA;
+}
+
+QHeaderView::section {
+    background: white;
+    color: #6C6C70;
+    font-weight: bold;
+    border: none;
+    border-bottom: 1px solid #E5E5EA;
+    padding: 6px;
+}
+
+/* журнал моноширинным шрифтом */
+QPlainTextEdit {
+    font-family: Consolas;
+}
+
+/* поля ввода */
+QLineEdit, QSpinBox, QDoubleSpinBox, QDateEdit, QComboBox {
+    background: white;
+    border: 1px solid #D1D1D6;
+    border-radius: 8px;
+    padding: 5px 8px;
+}
+
+QLineEdit:focus, QSpinBox:focus, QDoubleSpinBox:focus, QDateEdit:focus, QComboBox:focus {
+    border-color: #E6A700;
+}
+
+/* убираем стрелки у чисел */
+QSpinBox::up-button, QSpinBox::down-button, QDoubleSpinBox::up-button, QDoubleSpinBox::down-button {
+    width: 0;
+}
+
+/* обычные кнопки */
+QPushButton {
+    background: white;
+    border: 1px solid #D1D1D6;
+    border-radius: 8px;
+    padding: 6px 14px;
+}
+
+QPushButton:hover {
+    background: #F7F7F9;
+}
+
+/* главная жёлтая кнопка */
+QPushButton#primary {
+    background: #FFCC00;
+    border: none;
+    font-weight: bold;
+}
+
+QPushButton#primary:hover {
+    background: #F5C400;
+}
+
+/* красная кнопка удаления */
+QPushButton#danger {
+    color: #D70015;
+}
+
+/* кнопки-ссылки без рамки */
+QPushButton#link, QPushButton#danger_link {
+    background: transparent;
+    border: none;
+    padding: 2px;
+    color: #9C6F00;
+    font-weight: bold;
+}
+
+QPushButton#danger_link {
+    color: #D70015;
+}
+
+/* кнопка выбора упражнения */
+QPushButton#picker {
+    text-align: left;
+    font-weight: bold;
+}
+
+/* кнопки-иконки на главном окне */
+QToolButton#icon {
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    padding: 4px;
+    color: #9C6F00;
+    font-size: 9pt;
+}
+
+QToolButton#icon:hover {
+    background: #E5E5EA;
+}
+
+/* тонкая полоса прогресса */
+QProgressBar {
+    background: #E5E5EA;
+    border: none;
+    border-radius: 3px;
+    max-height: 6px;
+}
+
+QProgressBar::chunk {
+    background: #E6A700;
+    border-radius: 3px;
+}

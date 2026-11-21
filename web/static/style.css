@@ -1,0 +1,217 @@
+/* общий фон и шрифт */
+body {
+    margin: 0;
+    background: #F2F2F7;
+    color: #1C1C1E;
+    font-family: -apple-system, "Segoe UI", sans-serif;
+    font-size: 15px;
+}
+
+/* ссылки жёлтым цветом */
+a {
+    color: #9C6F00;
+}
+
+/* меню сверху */
+nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding: 12px 20px;
+    background: white;
+    border-bottom: 1px solid #E5E5EA;
+}
+
+nav a {
+    color: #9C6F00;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+/* колонка с содержимым */
+main {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 8px 16px 40px;
+}
+
+h1 {
+    font-size: 32px;
+    margin: 16px 0 4px;
+}
+
+/* серый поясняющий текст */
+.muted {
+    color: #6C6C70;
+}
+
+.center {
+    text-align: center;
+}
+
+/* название группы упражнений */
+.section {
+    color: #6C6C70;
+    font-size: 13px;
+    text-transform: uppercase;
+    margin: 20px 10px 6px;
+}
+
+/* белые карточки и списки */
+.card, .list {
+    background: white;
+    border-radius: 12px;
+    padding: 12px 14px;
+    margin: 10px 0;
+}
+
+.list {
+    padding: 4px 0;
+}
+
+/* строка списка */
+.item {
+    display: block;
+    padding: 10px 14px;
+    color: inherit;
+    text-decoration: none;
+    border-bottom: 1px solid #E5E5EA;
+}
+
+.item:last-child {
+    border-bottom: none;
+}
+
+a.item:hover {
+    background: #F7F7F9;
+}
+
+.item span {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* поля в одну строку */
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    margin: 8px 0;
+}
+
+/* форма профиля столбиком */
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 320px;
+}
+
+.form label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+/* таблицы с данными */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th {
+    color: #6C6C70;
+    font-size: 13px;
+    text-align: left;
+}
+
+th, td {
+    padding: 8px 6px;
+    border-bottom: 1px solid #E5E5EA;
+}
+
+/* поля ввода */
+input, select {
+    font: inherit;
+    padding: 6px 10px;
+    border: 1px solid #D1D1D6;
+    border-radius: 8px;
+    background: white;
+}
+
+input[type="number"] {
+    width: 80px;
+}
+
+/* обычные кнопки */
+button {
+    font: inherit;
+    padding: 7px 14px;
+    border: 1px solid #D1D1D6;
+    border-radius: 8px;
+    background: white;
+    cursor: pointer;
+}
+
+button.primary {
+    background: #FFCC00;
+    border: none;
+    font-weight: 600;
+}
+
+button.danger {
+    color: #D70015;
+}
+
+button.link {
+    background: none;
+    border: none;
+    padding: 2px;
+}
+
+/* крупный результат */
+.value {
+    font-size: 19px;
+    font-weight: bold;
+    margin: 6px 0;
+}
+
+/* стрелки рекомендации */
+.up {
+    color: #248A3D;
+}
+
+.down {
+    color: #C93400;
+}
+
+/* полоса прогресса */
+.bar {
+    height: 6px;
+    margin-top: 6px;
+    background: #E5E5EA;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.bar div {
+    height: 100%;
+    background: #E6A700;
+}
+
+/* журнал и ошибки */
+pre {
+    background: white;
+    border-radius: 12px;
+    padding: 12px;
+    overflow-x: auto;
+    font-size: 13px;
+}
+
+.error {
+    color: #D70015;
+}

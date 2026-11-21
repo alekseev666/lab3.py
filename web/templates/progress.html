@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Мой прогресс</h1>
+<p class="muted">{{ level }}</p>
+{% if show_all %}
+<a href="/progress">Только мои упражнения</a>
+{% else %}
+<a href="/progress?show_all=true">Показать все упражнения</a>
+{% endif %}
+
+<!-- упражнения по группам -->
+{% for group, rows in groups %}
+<h3 class="section">{{ group }}</h3>
+<div class="list">
+    {% for row in rows %}
+    <a class="item" href="/exercises/{{ row.id }}">
+        <b>{{ row.name }}</b> — {{ row.now }}
+        <span class="muted">
+            {% if row.next %}Дальше: {{ row.next }}{% endif %}
+            {% if row.arrow == "↑" %}<b class="up">↑</b>{% elif row.arrow == "↓" %}<b class="down">↓</b>{% endif %}
+            {% if row.goal %} → цель {{ row.goal }}{% endif %}
+            {% if row.percent is not none %} ({{ row.percent | round | int }} %){% endif %}
+        </span>
+        {% if row.percent is not none %}<div class="bar"><div style="width: {{ row.percent }}%"></div></div>{% endif %}
+    </a>
+    {% endfor %}
+</div>
+{% else %}
+<p class="muted">Пока пусто. Добавьте упражнения в тренировку или нажмите «Показать все упражнения».</p>
+{% endfor %}
+{% endblock %}

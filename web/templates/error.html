@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Ошибка</h1>
+
+<!-- текст ошибки -->
+<p class="card error">{{ message }}</p>
+<button onclick="history.back()">Назад</button>
+{% endblock %}

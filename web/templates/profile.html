@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Профиль</h1>
+<p class="muted">{{ level }}. От стажа зависит, как быстро прибавлять вес.</p>
+
+<!-- форма профиля -->
+<form class="card form" method="post" action="/profile">
+    <label>Пол
+        <select name="gender">
+            <option {% if user.gender == "Мужской" %}selected{% endif %}>Мужской</option>
+            <option {% if user.gender == "Женский" %}selected{% endif %}>Женский</option>
+        </select>
+    </label>
+    <label>Рост, см <input type="number" name="height" value="{{ user.height }}" min="100" max="230" required></label>
+    <label>Вес, кг <input type="number" name="weight" value="{{ user.weight }}" min="30" max="250" step="any" required></label>
+    <label>Занимаюсь с <input type="date" name="training_since" value="{{ user.training_since or today }}" max="{{ today }}" required></label>
+    <button class="primary">Сохранить</button>
+</form>
+{% endblock %}

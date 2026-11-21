@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Тренировки</h1>
+<p class="muted">{{ level }}</p>
+
+<!-- новая тренировка -->
+<form class="card row" method="post" action="/trainings">
+    <input type="date" name="day" value="{{ today }}" required>
+    <button class="primary">Новая тренировка</button>
+</form>
+
+<!-- список тренировок -->
+<div class="list">
+    {% for row in rows %}
+    <a class="item" href="/trainings/{{ row.id }}">
+        <b>{{ row.title }}</b>
+        <span class="muted">{{ row.text }}</span>
+    </a>
+    {% else %}
+    <p class="item muted">Тренировок пока нет.</p>
+    {% endfor %}
+</div>
+<p class="muted center">{{ counter }}</p>
+{% endblock %}

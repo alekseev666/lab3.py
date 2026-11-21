@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>{{ info.name }}</h1>
+<p class="muted">{{ info.group }} · {{ info.rep_range[0] }}–{{ info.rep_range[1] }} {% if info.is_timed() %}секунд{% else %}повторений{% endif %}</p>
+
+<!-- результат, совет и цель -->
+<div class="card">
+    <p class="value">Сейчас: {{ now }}</p>
+    <p class="muted">{{ advice }}</p>
+    <p class="value">{{ goal_text }}{% if percent is not none %} ({{ percent | round | int }} %){% endif %}</p>
+    {% if percent is not none %}<div class="bar"><div style="width: {{ percent }}%"></div></div>{% endif %}
+    <form class="row" method="post" action="/exercises/{{ info.id }}/goal">
+        {% if not info.is_bodyweight() %}
+        <label>Вес <input type="number" name="weight" value="{{ goal_weight }}" min="0" max="1000" step="any"></label>
+        {% endif %}
+        <label>{% if info.is_timed() %}Секунды{% else %}Повторения{% endif %} <input type="number" name="reps" value="{{ goal_reps }}" min="1" max="1000"></label>
+        <button>Поставить цель</button>
+    </form>
+    {% if goal %}
+    <form method="post" action="/exercises/{{ info.id }}/goal/delete">
+        <button class="link danger">Удалить цель</button>
+    </form>
+    {% endif %}
+</div>
+
+<!-- график результатов -->
+{% if values %}
+<div class="card"><canvas id="chart"></canvas></div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+    const datasets = [{data: {{ values | tojson }}, borderColor: "#E6A700", backgroundColor: "#E6A700"}];
+    {% if goal_line %}
+    datasets.push({data: {{ goal_line | tojson }}, borderColor: "#248A3D", borderDash: [6, 4], pointRadius: 0});
+    {% endif %}
+    new Chart(document.getElementById("chart"), {type: "line", data: {labels: {{ labels | tojson }}, datasets: datasets}, options: {plugins: {legend: {display: false}}}});
+</script>
+{% endif %}
+
+<!-- история подходов -->
+{% if rows %}
+<div class="card">
+    <table>
+        <tr><th>Дата</th><th>Вес</th><th>Повторения</th>{% if not info.is_bodyweight() %}<th>Максимум</th>{% endif %}</tr>
+        {% for row in rows %}
+        <tr>
+            <td>{{ row[0] }}</td><td>{{ row[1] }}</td><td>{{ row[2] }}</td>{% if not info.is_bodyweight() %}<td>{{ row[3] }}</td>{% endif %}
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endif %}
+{% endblock %}
